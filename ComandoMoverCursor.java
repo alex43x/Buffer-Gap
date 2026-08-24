@@ -7,7 +7,7 @@
  */
 public class ComandoMoverCursor implements Comando {
     private final BufferGap<Character> buffer;
-    private final int delta;
+    private final int delta;//Guarda porque su opuesto permite regresar a la posicion anterior.
 
     public ComandoMoverCursor(BufferGap<Character> buffer, int delta) {
         this.buffer = buffer;

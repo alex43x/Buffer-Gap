@@ -5,7 +5,7 @@
     - Angel Zacarias Portillo Sales   - CIC: 7259245 - Seccion: TS
     - Alex Giovanni Llamosas Maidana  - CIC: 5631704 - Seccion: TS
  */
-/** Pila generica propia implementada mediante nodos enlazados. */
+/* Pila generica propia implementada mediante nodos enlazados. */
 public class PilaES<E> {
     private class Nodo {
         private E dato;

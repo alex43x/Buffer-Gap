@@ -6,7 +6,7 @@
     - Alex Giovanni Llamosas Maidana  - CIC: 5631704 - Seccion: TS
  */
 import java.util.Random;
-
+/* Prueba la traza, los limites, el iterador y el conteo de desplazamientos de BufferGap. */
 public class TestBufferGap {
     private static final int CANTIDAD_ALEATORIA = 100000;
     private static final int CANTIDAD_INSERCIONES = 10000;
@@ -18,7 +18,7 @@ public class TestBufferGap {
         imprimirTablaDesplazamientos();
         System.out.println("Todas las pruebas de BufferGap finalizaron correctamente.");
     }
-
+    /* Reproduce paso a paso la traza obligatoria indicada en el trabajo. */
     private static void probarTrazaObligatoria() throws BufferVacioException {
         System.out.println("TRAZA OBLIGATORIA");
         BufferGap<Character> buffer = new BufferGap<Character>();
@@ -53,7 +53,7 @@ public class TestBufferGap {
         verificarEstado(buffer, "Ho|la", 2, 14, 2);
         System.out.println("Traza obligatoria: correcta\n");
     }
-
+    /* Verifica excepciones, limites, crecimiento y funcionamiento de get y set. */
     private static void probarLimitesYCrecimiento() throws BufferVacioException {
         BufferGap<Integer> buffer = new BufferGap<Integer>();
         boolean borrarFallo = false;
@@ -97,7 +97,7 @@ public class TestBufferGap {
         verificar(getFallo && setFallo && moverFallo, "Las operaciones fuera de rango deben fallar");
         System.out.println("Limites y crecimiento: correctos");
     }
-
+    /* Inserta 100000 caracteres aleatorios y verifica cantidad y orden mediante for-each. */
     private static void probarIteracionAleatoria() {
         BufferGap<Character> buffer = new BufferGap<Character>();
         Character[] esperados = new Character[CANTIDAD_ALEATORIA];
@@ -117,7 +117,7 @@ public class TestBufferGap {
         verificar(cantidad == esperados.length, "Cantidad incorrecta durante la iteracion");
         System.out.println("Iteracion de 100000 caracteres: correcta");
     }
-
+    /* Compara los desplazamientos del BufferGap con los de un arreglo de insercion ingenua. */
     private static void imprimirTablaDesplazamientos() {
         System.out.println("\nTABLA DE DESPLAZAMIENTOS");
         System.out.println("N | Desplazamientos BufferGap | Desplazamientos arreglo simple");
@@ -138,19 +138,23 @@ public class TestBufferGap {
             System.out.println(n + " | " + buffer.desplazamientos() + " | "
                     + arreglo.desplazamientos());
         }
-
-        // BufferGap inserta directamente sobre el hueco ya ubicado. El arreglo
-        // simple desplaza los elementos posteriores en cada insercion; por eso
-        // sus desplazamientos aumentan cuando crece n.
+    /* BufferGap inserta directamente sobre el hueco ya ubicado. El arreglo
+       simple desplaza los elementos posteriores en cada insercion; por eso
+        sus desplazamientos aumentan cuando crece n. */
     }
 
+    /* Imprime el estado interno requerido para comprobar la traza. */
     private static void imprimirEstado(BufferGap<Character> buffer) {
         int inicio = buffer.posicionCursor();
         int fin = inicio + buffer.capacidad() - buffer.size();
-        System.out.println(buffer + "  inicioHueco=" + inicio + " finHueco=" + fin
+
+        System.out.println(buffer
+                + "  inicioHueco=" + inicio
+                + " finHueco=" + fin
+                + " capacidad=" + buffer.capacidad()
                 + " desplazamientos=" + buffer.desplazamientos());
     }
-
+    /* Comprueba que el estado del buffer coincida con los valores esperados. */
     private static void verificarEstado(BufferGap<Character> buffer, String contenido,
             int inicio, int fin, long desplazamientos) {
         verificar(buffer.toString().equals(contenido), "Contenido esperado: " + contenido);
@@ -160,13 +164,13 @@ public class TestBufferGap {
         verificar(buffer.desplazamientos() == desplazamientos,
                 "Desplazamientos esperados: " + desplazamientos);
     }
-
+    /* Detiene la prueba si una condicion esperada no se cumple. */
     private static void verificar(boolean condicion, String mensaje) {
         if (!condicion) {
             throw new AssertionError(mensaje);
         }
     }
-
+    /* Implementacion ingenua basada en arreglo para comparar desplazamientos. */
     private static class ArregloSimple {
         private final Character[] datos;
         private int cantidad;
@@ -192,19 +196,12 @@ public class TestBufferGap {
             cantidad++;
         }
 
+        /* Realiza inserciones consecutivas usando la insercion ingenua del arreglo. */
         void insertarConsecutivos(char valor, int posicion, int repeticiones) {
-            int elementosDerecha = cantidad - posicion;
-            for (int i = cantidad - 1; i >= posicion; i--) {
-                datos[i + repeticiones] = datos[i];
-            }
             for (int i = 0; i < repeticiones; i++) {
-                datos[posicion + i] = valor;
+                insertar(valor, posicion + i);
             }
-            // Equivale al contador de llamar insertar y avanzar la posicion.
-            desplazamientos += (long) elementosDerecha * repeticiones;
-            cantidad += repeticiones;
         }
-
         long desplazamientos() {
             return desplazamientos;
         }
