@@ -1,6 +1,6 @@
 Declaracion de HONOR
 
-Nosotros Angel Zacarias Portillo Sales, Alex Giovanni Llamosas Maidana y <NOMBRE DEL TERCER INTEGRANTE>:
+Nosotros Angel Zacarias Portillo Sales, Alex Giovanni Llamosas Maidana
 
 - No hemos discutido el codigo fuente de nuestra tarea con ningun otro grupo, solo con el Profesor o el AER.
 - No hemos usado codigo obtenido de otro estudiante o de cualquier otra fuente no autorizada, modificada o no modificada.
