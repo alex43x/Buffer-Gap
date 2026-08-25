@@ -1,12 +1,11 @@
 /*
- * Grupo: <GRUPO>
- * Tarea: TP1 - U1
- * Integrantes:
- * - Portillo Sales, Angel Zacarias - CIC: <CIC_1> - Seccion: <SECCION_1>
- * - Llamosas Maidana, Alex Giovanni - CIC: <CIC_2> - Seccion: <SECCION_2>
- * - <APELLIDO_3>, <NOMBRE_3> - CIC: <CIC_3> - Seccion: <SECCION_3>
+  Grupo: g_ts9
+  Tarea: TP1 - U1
+  Integrantes:
+    - Angel Zacarias Portillo Sales   - CIC: 7259245 - Seccion: TS
+    - Alex Giovanni Llamosas Maidana  - CIC: 5631704 - Seccion: TS
  */
-
+/* Define el contrato comun para las operaciones que pueden ejecutarse y deshacerse. */
 public interface Comando {
     void ejecutar();
     void deshacer();
