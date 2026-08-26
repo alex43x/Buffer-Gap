@@ -289,7 +289,7 @@ y produzca una validacion incorrecta. La posicion debe quedar entre cero y
 
 ### 10.1 Movimiento hacia la izquierda
 
-Para cada posicion:
+Cuando el hueco tiene tamaño mayor que cero, para cada posicion:
 
 ```java
 datos[finHueco - 1] = datos[inicioHueco - 1];
@@ -322,11 +322,13 @@ inicioHueco=2, finHueco=14
 Resultado logico: Ho|la
 ```
 
-Se contaron dos desplazamientos.
+Se contaron dos desplazamientos. Si el hueco tiene tamaño cero, la celda de
+origen y la de destino coinciden; en ese caso solo cambian ambos limites y no se
+cuenta una autoasignacion como desplazamiento fisico.
 
 ### 10.2 Movimiento hacia la derecha
 
-Para cada posicion:
+Cuando el hueco tiene tamaño mayor que cero, para cada posicion:
 
 ```java
 datos[inicioHueco] = datos[finHueco];
@@ -336,7 +338,8 @@ desplazamientos++;
 ```
 
 Desde `Ho|la`, un paso copia `l` desde el comienzo de la zona derecha al
-comienzo del hueco. El resultado es `Hol|a`.
+comienzo del hueco. El resultado es `Hol|a`. Con hueco de tamaño cero, solo se
+ajustan los dos limites porque no existe una celda distinta a la cual copiar.
 
 ### 10.3 Delta igual a cero
 
@@ -495,7 +498,7 @@ existia cambia de celda fisica.
 |---|---:|---|
 | Insertar normalmente | No | El elemento es nuevo. |
 | Borrar | No | Solo cambia el limite del hueco. |
-| Mover cursor | Si | Se traslada un elemento por posicion. |
+| Mover cursor | Si, con hueco disponible | Se traslada un elemento por posicion; con hueco de tamaño cero solo cambian los limites. |
 | Crecer | Si | Cada elemento existente se copia. |
 | `get` | No | Solo consulta. |
 | `set` | No | Reemplaza en la misma celda. |
@@ -823,11 +826,10 @@ El hueco disponible supera las 10.000 posiciones en todos los tamaños medidos,
 por lo que esas inserciones no requieren crecimiento y producen cero
 desplazamientos en el BufferGap.
 
-El helper `ArregloSimple` incluye una insercion individual que desplaza con un
-ciclo. Para que la tabla grande no ejecute miles de millones de asignaciones,
-`insertarConsecutivos` construye por lote el mismo estado final y acumula el
-contador equivalente a realizar las inserciones individuales avanzando la
-posicion.
+El helper `ArregloSimple` implementa la insercion ingenua desplazando con un
+ciclo todos los elementos que estan a la derecha. `insertarConsecutivos` llama
+10.000 veces a esa insercion individual y avanza la posicion despues de cada
+caracter. Por eso la prueba realiza y cuenta realmente cada traslado.
 
 Si hay `n/2` elementos a la derecha y se hacen 10.000 inserciones consecutivas,
 el contador equivalente es:
@@ -920,7 +922,7 @@ Sin necesidad de un analisis formal, se puede explicar:
 | Insercion con hueco disponible | Una escritura. |
 | Borrado | Cambio de limite y retorno. |
 | `get` o `set` | Calculo directo de indice. |
-| Mover cursor | Un traslado por posicion recorrida. |
+| Mover cursor | Un traslado por posicion recorrida, salvo que el hueco tenga tamaño cero. |
 | Crecimiento | Copiar todos los elementos existentes. |
 | Apilar o desapilar | Cambiar referencias en el frente. |
 | Deshacer o rehacer | Operacion del comando mas cambios de pila. |
@@ -976,7 +978,7 @@ Una explicacion de aproximadamente un minuto puede ser:
 > BufferGap guarda una secuencia en un arreglo dividido en zona izquierda,
 > hueco y zona derecha. El cursor es el comienzo del hueco. Insertar consume
 > una celda libre y borrar amplia el hueco; mover el cursor traslada un elemento
-> por posicion. Los indices logicos posteriores al cursor saltan el tamaño del
+> por posicion cuando existe hueco. Los indices logicos posteriores al cursor saltan el tamaño del
 > hueco. Cuando se llena, el arreglo duplica su capacidad y conserva el hueco
 > en el cursor. Para deshacer y rehacer, cada accion es un objeto Comando con el
 > estado minimo necesario. HistorialEdicion mueve esos objetos entre dos pilas

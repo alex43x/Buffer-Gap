@@ -1,7 +1,7 @@
 # TP1 - BufferGap e HistorialEdicion
 
-**Grupo:** `<GRUPO>`  
-**Integrantes:** Angel Zacarias Portillo Sales (`CIC: <CIC_1>`, `Seccion: <SECCION_1>`), Alex Giovanni Llamosas Maidana (`CIC: <CIC_2>`, `Seccion: <SECCION_2>`) y `<APELLIDO_3>, <NOMBRE_3>` (`CIC: <CIC_3>`, `Seccion: <SECCION_3>`).
+**Grupo:** `g_ts9`  
+**Integrantes:** Angel Zacarias Portillo Sales (`CI Nº: 7259245`, `Seccion: TS`) y Alex Giovanni Llamosas Maidana (`CI Nº: 5631704`, `Seccion: TS`).
 
 `BufferGap<E>` representa una secuencia generica mediante un arreglo dividido en elementos anteriores al cursor, un hueco y elementos posteriores. El cursor es siempre `inicioHueco`; no existe un campo separado. Al crecer, la capacidad se duplica y el hueco permanece en la posicion logica actual del cursor.
 

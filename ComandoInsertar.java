@@ -2,8 +2,8 @@
   Grupo: g_ts9
   Tarea: TP1 - U1
   Integrantes:
-    - Angel Zacarias Portillo Sales   - CIC: 7259245 - Seccion: TS
-    - Alex Giovanni Llamosas Maidana  - CIC: 5631704 - Seccion: TS
+    - Angel Zacarias Portillo Sales   - CI Nº: 7259245 - Seccion: TS
+    - Alex Giovanni Llamosas Maidana  - CI Nº: 5631704 - Seccion: TS
  */
 /*Ingresa un caracter y permite revertir con un borrado. */
 public class ComandoInsertar implements Comando {

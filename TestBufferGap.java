@@ -2,8 +2,8 @@
   Grupo: g_ts9
   Tarea: TP1 - U1
   Integrantes:
-    - Angel Zacarias Portillo Sales   - CIC: 7259245 - Seccion: TS
-    - Alex Giovanni Llamosas Maidana  - CIC: 5631704 - Seccion: TS
+    - Angel Zacarias Portillo Sales   - CI Nº: 7259245 - Seccion: TS
+    - Alex Giovanni Llamosas Maidana  - CI Nº: 5631704 - Seccion: TS
  */
 import java.util.Random;
 /* Prueba la traza, los limites, el iterador y el conteo de desplazamientos de BufferGap. */
@@ -22,34 +22,36 @@ public class TestBufferGap {
     private static void probarTrazaObligatoria() throws BufferVacioException {
         System.out.println("TRAZA OBLIGATORIA");
         BufferGap<Character> buffer = new BufferGap<Character>();
-        imprimirEstado(buffer);
+        imprimirEstado("(inicial)", buffer);
         verificarEstado(buffer, "|", 0, 16, 0);
 
         buffer.insertar('H');
-        imprimirEstado(buffer);
+        imprimirEstado("insertar('H')", buffer);
         verificarEstado(buffer, "H|", 1, 16, 0);
         buffer.insertar('o');
-        imprimirEstado(buffer);
+        imprimirEstado("insertar('o')", buffer);
         verificarEstado(buffer, "Ho|", 2, 16, 0);
         buffer.insertar('l');
-        imprimirEstado(buffer);
+        imprimirEstado("insertar('l')", buffer);
         verificarEstado(buffer, "Hol|", 3, 16, 0);
         buffer.insertar('a');
-        imprimirEstado(buffer);
+        imprimirEstado("insertar('a')", buffer);
         verificarEstado(buffer, "Hola|", 4, 16, 0);
 
         buffer.moverCursor(-2);
-        imprimirEstado(buffer);
+        imprimirEstado("moverCursor(-2)", buffer);
         verificarEstado(buffer, "Ho|la", 2, 14, 2);
         buffer.insertar('X');
-        imprimirEstado(buffer);
+        imprimirEstado("insertar('X')", buffer);
         verificarEstado(buffer, "HoX|la", 3, 14, 2);
 
-        verificar(buffer.get(4) == 'a', "get(4) debe retornar 'a'");
-        imprimirEstado(buffer);
+        char obtenido = buffer.get(4);
+        verificar(obtenido == 'a', "get(4) debe retornar 'a'");
+        imprimirEstado("get(4) -> '" + obtenido + "'", buffer);
         verificarEstado(buffer, "HoX|la", 3, 14, 2);
-        verificar(buffer.borrar() == 'X', "borrar debe retornar 'X'");
-        imprimirEstado(buffer);
+        char borrado = buffer.borrar();
+        verificar(borrado == 'X', "borrar debe retornar 'X'");
+        imprimirEstado("borrar() -> '" + borrado + "'", buffer);
         verificarEstado(buffer, "Ho|la", 2, 14, 2);
         System.out.println("Traza obligatoria: correcta\n");
     }
@@ -68,13 +70,29 @@ public class TestBufferGap {
             buffer.insertar(i);
         }
         verificar(buffer.capacidad() == 16, "La capacidad inicial debe ser 16");
+
+        buffer.reiniciarDesplazamientos();
+        buffer.moverCursor(-8);
+        verificar(buffer.posicionCursor() == 8,
+                "El cursor debe moverse aunque el hueco tenga tamano cero");
+        verificar(buffer.desplazamientos() == 0,
+                "Una autoasignacion no debe contar como desplazamiento fisico");
+        for (int i = 0; i < 16; i++) {
+            verificar(buffer.get(i) == i,
+                    "Mover un hueco de tamano cero debe conservar el orden logico");
+        }
+
         buffer.insertar(16);
         verificar(buffer.capacidad() == 32, "La capacidad debe duplicarse");
-        verificar(buffer.posicionCursor() == 17, "El cursor debe conservar su posicion logica al crecer");
+        verificar(buffer.posicionCursor() == 9,
+                "El cursor debe conservar su posicion logica al crecer");
         verificar(buffer.desplazamientos() == 16, "El crecimiento debe contar 16 copias");
+        verificar(buffer.get(8) == 16 && buffer.get(9) == 8,
+                "El crecimiento en el medio debe conservar ambas zonas");
 
         int anterior = buffer.set(99, 8);
-        verificar(anterior == 8 && buffer.get(8) == 99, "set debe reemplazar y retornar el valor anterior");
+        verificar(anterior == 16 && buffer.get(8) == 99,
+                "set debe reemplazar y retornar el valor anterior");
 
         boolean getFallo = false;
         boolean setFallo = false;
@@ -90,7 +108,7 @@ public class TestBufferGap {
             setFallo = true;
         }
         try {
-            buffer.moverCursor(1);
+            buffer.moverCursor(buffer.size() - buffer.posicionCursor() + 1);
         } catch (PosicionInvalidaException e) {
             moverFallo = true;
         }
@@ -144,11 +162,11 @@ public class TestBufferGap {
     }
 
     /* Imprime el estado interno requerido para comprobar la traza. */
-    private static void imprimirEstado(BufferGap<Character> buffer) {
+    private static void imprimirEstado(String operacion, BufferGap<Character> buffer) {
         int inicio = buffer.posicionCursor();
         int fin = inicio + buffer.capacidad() - buffer.size();
 
-        System.out.println(buffer
+        System.out.println(operacion + " | " + buffer
                 + "  inicioHueco=" + inicio
                 + " finHueco=" + fin
                 + " capacidad=" + buffer.capacidad()
